@@ -103,7 +103,7 @@ class syntax_plugin_exttab3 extends DokuWiki_Syntax_Plugin
     protected function close($tag, $pos, $match, $handler)
     {
       //$this->writeCall($tag,'',DOKU_LEXER_EXIT, $pos,$match,$handler);
-        $match = array(DOKU_LEXER_EXIT, $tag, $attr);
+        $match = array(DOKU_LEXER_EXIT, $tag);
         $handler->plugin($match, 'addPluginCall', $pos, $this->getPluginName());
     }
 
@@ -151,7 +151,7 @@ class syntax_plugin_exttab3 extends DokuWiki_Syntax_Plugin
     {
         $regex = "/\b(?:class=\")(.*?\b($class)?\b.*?)\"/";
         preg_match($regex, $attr, $matches);
-        if ($matches[2]) {
+        if (isset($matches[2]) && $matches[2]) {
             // $class found in the class attribute
             return $attr;
         } elseif (empty($matches[0])) {
@@ -308,7 +308,7 @@ class syntax_plugin_exttab3 extends DokuWiki_Syntax_Plugin
         isset($this->tagsmap) || $this->setTagsmap();
         isset($this->attrmap) || $this->setAllowedAttributes();
 
-        list($state, $tag, $attr) = $data;
+        list($state, $tag, $attr) = array_pad($data, 3, null);
 
         switch ($state) {
             case DOKU_LEXER_ENTER:    // open tag
